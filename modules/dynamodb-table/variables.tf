@@ -117,9 +117,8 @@ variable "tables" {
   validation {
     condition = alltrue([
       for k, v in var.tables :
-      v.server_side_encryption == null ||
-      v.server_side_encryption.kms_key_arn == null ||
-      can(regex("^arn:aws:kms:[a-z0-9-]+:[0-9]{12}:key/[a-f0-9-]+$", v.server_side_encryption.kms_key_arn))
+      try(v.server_side_encryption.kms_key_arn, null) == null ||
+      can(regex("^arn:aws:kms:[a-z0-9-]+:[0-9]{12}:key/[a-f0-9-]+$", try(v.server_side_encryption.kms_key_arn, "")))
     ])
     error_message = "'server_side_encryption.kms_key_arn' must match ^arn:aws:kms:[a-z0-9-]+:[0-9]{12}:key/[a-f0-9-]+$ when set."
   }
