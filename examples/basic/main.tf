@@ -1,52 +1,41 @@
-module "security_groups" {
-  source = "../../modules/security-group"
+module "dynamodb_table" {
+  source = "../../modules/dynamodb-table"
 
   region = var.region
 
-  security_groups = {
-    web = {
-      name        = "web-sg"
-      description = "Web tier security group"
-      vpc_id      = var.vpc_id
-      tags = {
-        Tier = "web"
+  tables = {
+    orders = {
+      name      = var.table_name
+      hash_key  = "OrderId"
+      range_key = "CreatedAt"
+
+      attributes = [
+        { name = "OrderId", type = "S" },
+        { name = "CreatedAt", type = "S" },
+        { name = "CustomerId", type = "S" },
+      ]
+
+      global_secondary_indexes = {
+        "by-customer" = {
+          hash_key        = "CustomerId"
+          range_key       = "CreatedAt"
+          projection_type = "ALL"
+        }
       }
-    }
-  }
-}
 
-module "security_group_rules" {
-  source = "../../modules/security-group-rules"
+      ttl = {
+        attribute_name = "ExpiresAt"
+        enabled        = true
+      }
 
-  region = var.region
+      point_in_time_recovery = {
+        enabled = true
+      }
 
-  rules = {
-    web_https_ingress = {
-      security_group_id = module.security_groups.security_group_ids["web"]
-      type              = "ingress"
-      from_port         = 443
-      to_port           = 443
-      ip_protocol       = "tcp"
-      cidr_ipv4         = "0.0.0.0/0"
-      description       = "Allow HTTPS from the internet"
-    }
-    web_http_ingress = {
-      security_group_id = module.security_groups.security_group_ids["web"]
-      type              = "ingress"
-      from_port         = 80
-      to_port           = 80
-      ip_protocol       = "tcp"
-      cidr_ipv4         = "0.0.0.0/0"
-      description       = "Allow HTTP from the internet"
-    }
-    web_all_egress = {
-      security_group_id = module.security_groups.security_group_ids["web"]
-      type              = "egress"
-      from_port         = 0
-      to_port           = 0
-      ip_protocol       = "-1"
-      cidr_ipv4         = "0.0.0.0/0"
-      description       = "Allow all egress"
+      tags = {
+        Environment = "dev"
+        Module      = "terraform-aws-dynamodb"
+      }
     }
   }
 }

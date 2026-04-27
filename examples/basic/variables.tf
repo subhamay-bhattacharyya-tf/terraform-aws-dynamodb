@@ -4,7 +4,8 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "vpc_id" {
+variable "table_name" {
   type        = string
-  description = "VPC ID where the security group will be created."
+  description = "Name of the DynamoDB table to create."
+  default     = "orders"
 }

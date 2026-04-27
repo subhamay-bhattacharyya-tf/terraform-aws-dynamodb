@@ -44,8 +44,5 @@ terraform.rc
 install-tools.log
 node_modules/
 
-
-
-
 ## Ignore log files
 gh-log.txt

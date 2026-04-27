@@ -59,7 +59,7 @@ jobs:
         working-directory: ${{ matrix.module }}
 
   # ============================================================================
-  # Validate Security Group Examples
+  # Validate DynamoDB Examples
   # ============================================================================
   examples-validate:
     name: Validate Examples
@@ -71,7 +71,7 @@ jobs:
       matrix:
         example:
           - examples/basic
-          - examples/cross-referenced
+          - examples/provisioned-with-autoscaling
     steps:
       - name: Checkout
         uses: actions/checkout@v6

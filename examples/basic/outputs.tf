@@ -1,14 +1,14 @@
-output "security_group_ids" {
-  description = "Map of logical keys to security group IDs."
-  value       = module.security_groups.security_group_ids
+output "table_names" {
+  description = "Map of logical keys to DynamoDB table names."
+  value       = module.dynamodb_table.table_names
 }
 
-output "ingress_rule_ids" {
-  description = "Map of logical keys to ingress rule IDs."
-  value       = module.security_group_rules.ingress_rule_ids
+output "table_arns" {
+  description = "Map of logical keys to DynamoDB table ARNs."
+  value       = module.dynamodb_table.table_arns
 }
 
-output "egress_rule_ids" {
-  description = "Map of logical keys to egress rule IDs."
-  value       = module.security_group_rules.egress_rule_ids
+output "global_secondary_index_names" {
+  description = "Map of logical keys to GSI name lists."
+  value       = module.dynamodb_table.global_secondary_index_names
 }
